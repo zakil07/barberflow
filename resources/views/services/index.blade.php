@@ -1,24 +1,36 @@
-<!doctype html>
-<html lang="id">
-<head>
-    <meta charset="utf-8">
-    <title>Layanan BarberFlow</title>
-</head>
-<body>
-    <h1>Layanan BarberFlow</h1>
+@extends('layouts.app')
 
-    <p><a href="{{ route('services.create') }}">Tambah layanan</a></p>
+@section('title', 'Daftar Layanan')
 
-    @forelse ($services as $service)
-        <article>
-            <h2>{{ $service->nama }}</h2>
-            <p>{{ $service->deskripsi ?? 'Tidak ada deskripsi.' }}</p>
-            <p>{{ $service->durasi_menit }} menit — Rp{{ number_format($service->harga, 0, ',', '.') }}</p>
-        </article>
-    @empty
-        <p>Belum ada layanan. Pastikan ServiceSeeder sudah dijalankan.</p>
-    @endforelse
+@section('content')
+    <h1 class="page-title">Daftar Layanan</h1>
 
-    {{ $services->links() }}
-</body>
-</html>
+    <p>
+        <a class="secondary-button" href="{{ route('services.create') }}">
+            Tambah layanan
+        </a>
+    </p>
+
+    @if ($services->isEmpty())
+        <p class="empty-message">Belum ada layanan.</p>
+    @else
+        <div class="card-grid">
+            @foreach ($services as $service)
+                <article class="card">
+                    <h2>{{ $service->nama }}</h2>
+                    <p>{{ $service->deskripsi ?? 'Tidak ada deskripsi.' }}</p>
+                    <p>{{ $service->durasi_menit }} menit</p>
+                    <p>
+                        <strong>
+                            Rp{{ number_format($service->harga, 0, ',', '.') }}
+                        </strong>
+                    </p>
+                </article>
+            @endforeach
+        </div>
+
+        <div class="pagination">
+            {{ $services->links() }}
+        </div>
+    @endif
+@endsection
